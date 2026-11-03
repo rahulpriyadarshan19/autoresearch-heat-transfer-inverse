@@ -1,2 +1,3 @@
 call_id,wall_time,input_tokens,cache_read_tokens,cache_write_tokens,output_tokens,cost,model,stop_reason
 c001,3.5092612109147012,177,0,1717,227,0.013833,claude-opus-5-5,end_turn
+c002,3.937520088162273,802,1717,0,229,0.008131399999999999,claude-opus-5-5,end_turn
