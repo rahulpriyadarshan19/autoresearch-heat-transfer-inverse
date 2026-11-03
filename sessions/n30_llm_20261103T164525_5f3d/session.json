@@ -1,0 +1,61 @@
+{
+ "planner_mode": "llm",
+ "seed": 0,
+ "model": "claude-opus-5-5",
+ "effort": "high",
+ "proxy_url": "http://127.0.0.1:8765",
+ "cache_ttl": "5m",
+ "program": "/home/user/rahul/autoresearch_heat_transfer_inverse/program.md",
+ "program_sha256": "2b7f7512525e22aee42170ea8f8251d90f487b1e99b7252d9009f63fcba57375",
+ "prices_usd_per_mtok": {
+  "input": 4.0,
+  "output": 20.0,
+  "cache_read": 0.2,
+  "cache_write": 5.0
+ },
+ "session_id": "n30_llm_20261103T164525_5f3d",
+ "mode": "llm",
+ "N": 30,
+ "B": 5,
+ "M": 50,
+ "maxiter": 5000,
+ "kill_time_s": 60.0,
+ "budget_s": 10800.0,
+ "mirror_reduce": false,
+ "n_sensor_layouts": 46376,
+ "ftol": 2.220446049250313e-09,
+ "gtol": 1e-05,
+ "d_min_m": 0.01,
+ "tol_spacing_m": 5e-05,
+ "margins_lo_m": [
+  0.001,
+  0.001,
+  0.001
+ ],
+ "margins_hi_m": [
+  0.001,
+  0.001,
+  0.001
+ ],
+ "mu": 10.0,
+ "faces": [
+  "y0",
+  "x0",
+  "x1",
+  "z0",
+  "z1"
+ ],
+ "bank_file": "/home/user/rahul/autoresearch_heat_transfer_inverse/outputs/case2_ar_cache/prior_banks.npz",
+ "bank_sha256": "064648489e97d7a83a2c39053895b3af5ad8b19aa8037c6c017a1f0f16f142d4",
+ "bank_key": "(512, 128, 10, 11, 0.0001, (10, 6, 10), 3.0, 2.0, 0, 1, 'cholqr3', 'qrcp', [3.7954891891721947, 2.3978952727983707], [0.7, 0.7])",
+ "evaluator_hash": "8580440d2725461ce126ad4503126b9d4e269fea",
+ "git_head": "63d29be768f1b969cbdea3fff8b9ee2f8ea18136",
+ "git_branch": "ar/n30",
+ "src_dirty": false,
+ "jax": "0.11.2",
+ "devices": [
+  "cuda:0"
+ ],
+ "python": "3.12.2",
+ "started": "2026-11-03T11:15:27.792927+00:00"
+}
