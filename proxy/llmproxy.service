@@ -1,0 +1,27 @@
+[Unit]
+Description=Local forwarder to the Anthropic API (holds the API key)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=llmkey
+Group=llmkey
+ExecStart=/usr/bin/python3 -I /opt/llmproxy/llmproxy.py
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictRealtime=yes
+LockPersonality=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+# Dependencies stay pinned in requirements.txt; `pip install -e . --no-deps` only links the packages.
+[project]
+name = "autoresearch-heat-inverse"
+version = "0.1.0"
+description = "Autoresearch harness for D-optimal sensor layouts of the MIPINN Case 2 NP-PIELM inverse problem"
+requires-python = ">=3.12"
+
+[tool.setuptools.packages.find]
+where = ["src"]
