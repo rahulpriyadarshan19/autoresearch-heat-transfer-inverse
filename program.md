@@ -32,12 +32,12 @@ The heated face y1 has no sensors.
 - The score is Φ_val = −mean_s log det(F_s + Σ₀⁻¹), the mean log-determinant of the Laplace posterior covariance. Lower is better. A lower score means a smaller joint posterior ellipse of (log k_xx, log k_yy).
 - You also see s1 and s2, the mean posterior standard deviations of log k_xx and log k_yy, and rho, their mean posterior correlation. The score uses only the determinant: a design can lower it through a narrower marginal or through a larger |rho|.
 - A final design with two sensors closer than 9.95 mm is discarded and marked "infeasible".
-- x0 and x1 are mirror images, and so are z0 and z1. A sensor_layout and its mirror image (counts swapped between x0 and x1, or between z0 and z1) have the same score. A mirror image of a tried sensor_layout counts as a repeat and is not run.
+- x0 and x1 are mirror images, and so are z0 and z1. A sensor_layout and its mirror image (counts swapped between x0 and x1, or between z0 and z1) are different trials: each starts from its own Halton positions, and L-BFGS-B finds a local optimum, so their scores can differ.
 
 ## Rules
 
 1. Propose exactly B sensor_layouts, each with sum N.
-2. Do not propose a sensor_layout that was already tried, or its mirror image.
+2. Do not propose a sensor_layout that was already tried.
 3. For each proposal, write a description of at most 100 characters that says what the trial tests, compared with the best sensor_layout so far.
 4. Use the feedback in the state: the best trials, the trials of the last batches, the best score for each count on each face, and the marks on your previous reply. Balance tests close to the best sensor_layout with tests of other regions.
 5. Reply only with the JSON object of the reply format.

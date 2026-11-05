@@ -213,8 +213,9 @@ def summary(d: Path):
     t_trial = float(np.mean([min(r["wall_optimise"], r["t_at_snapshot"] or r["wall_optimise"]) for r in A[:5]]))
     t_kill = 2 * max(r["t_at_snapshot"] or r["wall_optimise"] for r in A)
     L += ["", "== proposed settings (you decide) ==",
-          f"maxiter: 1000 is sufficient if max |score(1000) - score(final)| ({max_d1000:.4f}) is much smaller than "
-          f"the smallest score gap ({gap:.4f}); ratio {max_d1000 / gap:.2f}",
+          f"maxiter 1000: max |score(1000) - score(final)| / smallest score gap = {max_d1000:.4f} / {gap:.4f} = "
+          f"{max_d1000 / gap:.2f} -> {'sufficient' if max_d1000 / gap < 0.1 else 'not sufficient'} "
+          f"(rule: ratio < 0.1)",
           f"t_trial at maxiter 1000 (mean of the 5): {t_trial:.1f} s; kill time = 2 x longest: {t_kill:.0f} s"]
     for e in EFFORTS:
         b = max(1, math.ceil(4 * t_llm[e] / t_trial))
