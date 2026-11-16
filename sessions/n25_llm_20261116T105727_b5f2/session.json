@@ -57,5 +57,14 @@
   "cuda:0"
  ],
  "python": "3.12.2",
- "started": "2026-11-16T05:27:29.588225+00:00"
+ "started": "2026-11-16T05:27:29.588225+00:00",
+ "stop": "no runnable proposal in 3 calls",
+ "elapsed_s": 502.40170442219824,
+ "n_trials": 71,
+ "n_calls": 21,
+ "cost_usd": 0.89191,
+ "best_id": "b010-05",
+ "best_config": "0-13-7-3-2",
+ "best_score": -9.222570806013872,
+ "finished": "2026-11-16T05:35:51.990390+00:00"
 }
