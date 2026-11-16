@@ -19,6 +19,29 @@ from autoresearch import problem as P
 from heat_inverse import config
 
 
+def _section(title, body):
+    print(f"\n===== {title} =====\n{body}", flush=True)
+
+
+class EchoPlanner(planner.AnthropicPlanner):
+    """AnthropicPlanner that prints the system prompt once, then the user message and the response of each call."""
+
+    def propose(self, state_text, call_id):
+        if self.n_calls == 0:
+            _section("system prompt (same in every call)", self.program)
+        _section(f"{call_id} user message", state_text)
+        reply = super().propose(state_text, call_id)
+        if "error" in reply.raw:
+            _section(f"{call_id} error", reply.raw["error"])
+        else:
+            for blk in reply.raw["response"]["content"]:
+                _section(f"{call_id} {blk['type']}", blk.get("thinking", blk.get("text", "")))
+        c = reply.call
+        print(f"\n{call_id}: stop {c['stop_reason']}, {c['wall_time']:.1f} s, {c['output_tokens']} output tokens, "
+              f"{c['cache_read_tokens']} cache-read tokens, {c['cost']:.4f} USD", flush=True)
+        return reply
+
+
 def make_planner(args, root):
     if args.mode == "fake":
         return planner.RandomPlanner(args.n, args.b, args.seed)
@@ -29,8 +52,8 @@ def make_planner(args, root):
         return planner.Enumerator(args.n, args.b, args.seed, args.mirror_reduce, done=done)
     prices = dict(input=args.price_input, output=args.price_output, cache_read=args.price_cache_read,
                   cache_write=args.price_cache_write)
-    return planner.AnthropicPlanner(Path(args.program).read_text(), model=args.model, effort=args.effort,
-                                    base_url=args.proxy_url, prices=prices, cache_ttl=args.cache_ttl)
+    return EchoPlanner(Path(args.program).read_text(), model=args.model, effort=args.effort,
+                       base_url=args.proxy_url, prices=prices, cache_ttl=args.cache_ttl)
 
 
 def main() -> int:
