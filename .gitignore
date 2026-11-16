@@ -3,3 +3,7 @@ outputs/
 __pycache__/
 *.pyc
 *.egg-info/
+data/
+project_docs/
+sessions/
+CLAUDE.md   
