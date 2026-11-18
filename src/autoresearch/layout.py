@@ -56,15 +56,18 @@ def enumerate_layouts(n: int, mirror_reduce: bool = True) -> list[tuple[int, ...
     return sorted(out)
 
 
-def halton_unit(n: int) -> np.ndarray:
-    """First n points of the unscrambled 2-D Halton sequence (bases 2, 3) without the origin, (n, 2)."""
+def halton_unit(n: int, seed: int | None = None) -> np.ndarray:
+    """First n points of the 2-D Halton sequence (bases 2, 3), (n, 2): unscrambled without the origin if seed is
+    None, else scrambled with that seed."""
     if n == 0:
         return np.zeros((0, 2))
-    return qmc.Halton(d=2, scramble=False).random(n + 1)[1:]
+    if seed is None:
+        return qmc.Halton(d=2, scramble=False).random(n + 1)[1:]
+    return qmc.Halton(d=2, scramble=True, rng=seed).random(n)
 
 
-def start_design(counts) -> tuple[np.ndarray, np.ndarray]:
-    """Halton start positions inside the margins -> (X (N, 3) in m, faces (N,))."""
+def start_design(counts, seed: int | None = None) -> tuple[np.ndarray, np.ndarray]:
+    """Halton start positions inside the margins (scrambled with seed if given) -> (X (N, 3) in m, faces (N,))."""
     X, faces = [], []
     for name, n_f in zip(P.FACES, counts):
         if n_f == 0:
@@ -74,7 +77,7 @@ def start_design(counts) -> tuple[np.ndarray, np.ndarray]:
         Xf = np.zeros((n_f, 3))
         Xf[:, f.axis] = case2.BOUNDS[f.axis][f.side]
         lo, span = P.M_LO[ip], P.L3[ip] - P.M_LO[ip] - P.M_HI[ip]
-        Xf[:, ip] = lo + halton_unit(n_f) * span
+        Xf[:, ip] = lo + halton_unit(n_f, seed) * span
         X.append(Xf)
         faces += [name] * n_f
     return np.concatenate(X), np.array(faces)

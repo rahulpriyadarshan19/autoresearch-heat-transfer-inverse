@@ -27,9 +27,14 @@ def to_X(u, ip, X0):
     return jnp.asarray(X0).at[rows, ip].set(u.reshape(-1, 2) * jnp.asarray(P.L3)[ip])
 
 
+def loss(u, B, ip, X0):
+    """Training loss: D-criterion plus the soft spacing penalty."""
+    X = to_X(u, ip, X0)
+    return P.phi(X, B) + P.MU * P.spacing(X)
+
+
 phi_u = jax.jit(lambda u, B, ip, X0: P.phi(to_X(u, ip, X0), B))
-loss_and_grad = jax.jit(jax.value_and_grad(
-    lambda u, B, ip, X0: P.phi(to_X(u, ip, X0), B) + P.MU * P.spacing(to_X(u, ip, X0))))
+loss_and_grad = jax.jit(jax.value_and_grad(loss))
 
 
 def bounds_and_start(X0, faces):

@@ -6,14 +6,14 @@
 |---|---|
 | `program.md` | fixed planner instructions |
 | `src/heat_inverse/` | NP-PIELM forward model, verbatim copy of `heat_transfer_inverse` commit `a4ca30c` |
-| `src/autoresearch/` | `problem` (frozen constants, banks, Φ), `layout`, `trial`, `evaluator` (frozen), `state`, `planner`, `log`, `harness`, `plotting` |
+| `src/autoresearch/` | `problem` (frozen constants, banks, Φ), `layout`, `trial`, `multistart` (batched GPU L-BFGS), `noise` (best-of-R bootstrap), `evaluator` (frozen), `state`, `planner`, `log`, `harness`, `plotting` |
 | `proxy/` | API-key proxy (user `llmkey`): `llmproxy.py`, `llmproxy.service`, `install_proxy.sh`, `uninstall_proxy.sh` |
 | `scripts/` | `prepare_banks.py` (case2_ar_banks), `run_session.py` + `run_session.sh` (case2_ar_session), `plot_session.py` |
-| `scripts/smoke_test/` | `smoke_ar_trial.py`, `smoke_ar_harness.py`, `smoke_ar_proxy.py`, `smoke_ar_pilot.py` + `run_pilot.sh`, plot scripts |
+| `scripts/smoke_test/` | `smoke_ar_trial.py`, `smoke_ar_harness.py`, `smoke_ar_proxy.py`, `smoke_ar_pilot.py` + `run_pilot.sh`, `smoke_ar_multistart.py`, `smoke_ar_noise.py`, `run_smoke_gpu.sh`, plot scripts |
 | `data/reference/` | saved §6.1 design `dopt_x1z1_5`, used by `smoke_ar_trial.py` |
 | `sessions/<session_id>/` | `results.csv`, `calls.csv`, `session.json` (tracked) |
 | `outputs/` | bank cache, trial files, call files, smoke and pilot outputs, plots (not tracked) |
-| `project_docs/` | papers, session summaries, `case2_dopt_autoresearch_design.md` |
+| `project_docs/` | papers, session summaries, `case2_dopt_autoresearch_design.md`, `case2_dopt_autoresearch_learnings_design.md` |
 
 ## Setup
 
@@ -33,6 +33,15 @@ venv_ar/bin/python scripts/smoke_test/plot_smoke_ar_trial.py outputs/case2_ar_sm
 venv_ar/bin/python scripts/smoke_test/smoke_ar_harness.py
 venv_ar/bin/python scripts/smoke_test/smoke_ar_proxy.py
 scripts/smoke_test/run_pilot.sh
+```
+
+Learnings run (`--mode learn`, not yet built), smoke tests in order:
+
+```bash
+scripts/smoke_test/run_smoke_gpu.sh 0 0,1,4,5 scripts/smoke_test/smoke_ar_multistart.py
+venv_ar/bin/python scripts/smoke_test/plot_smoke_ar_multistart.py outputs/case2_ar_smoke_multistart_<stamp>
+scripts/smoke_test/run_smoke_gpu.sh 0 0,1,4,5 scripts/smoke_test/smoke_ar_noise.py
+venv_ar/bin/python scripts/smoke_test/plot_smoke_ar_noise.py outputs/case2_ar_smoke_noise_<stamp>
 ```
 
 Sessions run on a branch per N, with `src/` committed:
