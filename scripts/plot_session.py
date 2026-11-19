@@ -1,6 +1,7 @@
 """Plots W1–W6 of one N: an LLM session against the exhaustive run, from their saved logs.
 
-Smoke test: smoke_test/smoke_ar_harness.py runs this script on a fake-planner session and an exhaustive run.
+Smoke test: smoke_test/smoke_ar_harness.py runs this script on a fake-planner session and an exhaustive run;
+smoke_test/smoke_ar_learn.py runs it on a learnings session (--mode learn).
 
 Run:  venv_ar/bin/python scripts/plot_session.py --llm <session_id> --exh <session_id>
 """
@@ -21,7 +22,8 @@ from heat_inverse import config
 
 PHI = r"$\Phi_{\mathrm{val}}$"
 STYLE = {"llm": dict(color="C0", label="LLM session"), "exh": dict(color="C1", label="exhaustive (random order)")}
-MODE_LABEL = {"llm": "LLM session", "fake": "random planner", "exh": "exhaustive (random order)"}
+MODE_LABEL = {"llm": "LLM session", "learn": "learnings session", "fake": "random planner",
+              "exh": "exhaustive (random order)"}
 
 
 def load_run(root, out_root, sid):
@@ -47,8 +49,10 @@ def best_trace(run):
 
 
 def hours(run):
-    """Session time in h after each trial: trial wall times plus the planner call before each batch."""
-    call = {c["call_id"][1:]: float(c["wall_time"]) for c in run["calls"]}
+    """Session time in h after each trial: trial wall times plus the planner calls (with retries) before each batch."""
+    call = {}
+    for c in run["calls"]:
+        call[c["call_id"][1:]] = call.get(c["call_id"][1:], 0.0) + float(c["wall_time"])
     t, seen, out = 0.0, set(), []
     for r in run["rows"]:
         b = r["id"].split("-")[0][1:]

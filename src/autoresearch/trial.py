@@ -35,6 +35,12 @@ def loss(u, B, ip, X0):
 
 phi_u = jax.jit(lambda u, B, ip, X0: P.phi(to_X(u, ip, X0), B))
 loss_and_grad = jax.jit(jax.value_and_grad(loss))
+_phi_X = jax.jit(P.phi)
+
+
+def phi_train(X, B_train) -> float:
+    """Φ_train: D-criterion of a design on the training bank, without the spacing penalty (start selection)."""
+    return float(_phi_X(jnp.asarray(X), B_train))
 
 
 def bounds_and_start(X0, faces):
